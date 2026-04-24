@@ -3,6 +3,8 @@ package com.example.demo.controller;
 import com.example.demo.model.Student;
 import com.example.demo.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -16,28 +18,29 @@ public class StudentController {
     StudentService service;
 
     @GetMapping
-    public List<Student> getAllStudents(){
-        return service.getAllStudent();
+    public ResponseEntity<List<Student>> getAllStudents(){
+        return ResponseEntity.status(HttpStatus.OK).body(service.getAllStudent());
     }
 
     @GetMapping("/{id}")
-    public Student getStudentById(@PathVariable int id){
-        return service.getStudentById(id);
+    public ResponseEntity<Student> getStudentById(@PathVariable int id){
+        return ResponseEntity.status(HttpStatus.FOUND).body(service.getStudentById(id));
     }
 
     @PostMapping
-    public String addStudent(@RequestBody Student student){
-        return service.addStudent(student)?"Student added Successfully":"Error Adding Student";
+    public ResponseEntity<Student> addStudent(@RequestBody Student student){
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.addStudent(student));
     }
 
     @PutMapping("/{id}")
-    public String updateStudent(@PathVariable int id, @RequestBody Student student){
-        return service.updateStudent(id,student)?"Student updated Successfully":"Error Updating Student";
+    public ResponseEntity<Student> updateStudent(@PathVariable int id, @RequestBody Student student){
+        return ResponseEntity.status(HttpStatus.OK).body(service.updateStudent(id,student));
     }
 
     @DeleteMapping("/{id}")
-    public String deleteStudent(@PathVariable int id){
-        return service.deleteStudent(id)?"Student deleted Successfully":"Error Deleting Student";
+    public ResponseEntity<String> deleteStudent(@PathVariable int id){
+        service.deleteStudent(id);
+        return ResponseEntity.status(HttpStatus.OK).body("Student Deleted Successfully");
     }
 
 }

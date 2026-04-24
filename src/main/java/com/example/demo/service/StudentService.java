@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.model.Student;
 import com.example.demo.repository.StudentRepository;
+import com.example.demo.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,38 +14,29 @@ import java.util.List;
 public class StudentService {
     @Autowired
     StudentRepository repo;
-    List<Student> students=new ArrayList<>();
 
     public List<Student> getAllStudent(){
         return repo.findAll();
     }
 
-    public Boolean addStudent( Student student){
-        repo.save(student);
-        return true;
+    public Student addStudent( Student student){
+        return repo.save(student);
     }
 
     public Student getStudentById(int id) {
-        return repo.findById(id).orElse(null);
+        return repo.findById(id).orElseThrow(()-> new ResourceNotFoundException("Student Not Found with id: "+ id ));
     }
 
-    public Boolean updateStudent(int id, Student student) {
-        Student findStudent=repo.findById(id).orElse(null);
-        if(findStudent!=null){
+    public Student updateStudent(int id, Student student) {
+        Student findStudent=repo.findById(id).orElseThrow(()-> new ResourceNotFoundException("Student Not Found with id: "+ id ));
             findStudent.setName(student.getName());
             findStudent.setAge(student.getAge());
-            repo.save(findStudent);
-            return true;
-        }
-        return false;
+            return repo.save(findStudent);
     }
 
     public boolean deleteStudent(int id) {
-        Student findStudent=repo.findById(id).orElse(null);
-        if(findStudent!=null){
+        Student findStudent=repo.findById(id).orElseThrow(()-> new ResourceNotFoundException("Student Not Found with id: "+ id ));
             repo.delete(findStudent);
             return true;
-        }
-        return false;
     }
 }
