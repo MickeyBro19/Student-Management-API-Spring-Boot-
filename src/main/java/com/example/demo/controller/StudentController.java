@@ -4,12 +4,12 @@ import com.example.demo.DTO.StudentDTO;
 import com.example.demo.model.Student;
 import com.example.demo.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/students")
@@ -19,9 +19,9 @@ public class StudentController {
     StudentService service;
 
     @GetMapping
-    public ResponseEntity<List<StudentDTO>> getAllStudents(){
-        List<StudentDTO> DTO=service.getAllStudent().stream().map(service::convertToDTO).toList();
-        return ResponseEntity.status(HttpStatus.OK).body(DTO);
+    public ResponseEntity<Page<StudentDTO>> getAllStudents(Pageable pageable){
+        Page<StudentDTO> DTOPage=service.getAllStudent(pageable).map(service::convertToDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(DTOPage);
     }
 
     @GetMapping("/{id}")

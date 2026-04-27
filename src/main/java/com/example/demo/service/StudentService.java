@@ -1,9 +1,10 @@
 package com.example.demo.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
-import java.util.List;
 import com.example.demo.DTO.StudentDTO;
 import com.example.demo.model.Student;
 import com.example.demo.repository.StudentRepository;
@@ -18,9 +19,9 @@ public class StudentService {
     @Autowired
     StudentRepository repo;
 
-    public List<Student> getAllStudent(){
+    public Page<Student> getAllStudent(Pageable pageable){
         logger.info("Fetching all the Students");
-        return repo.findAll();
+        return repo.findAll(pageable);
     }
 
     public Student addStudent( Student student){
